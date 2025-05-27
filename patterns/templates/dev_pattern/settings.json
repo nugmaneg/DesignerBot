@@ -1,0 +1,52 @@
+{
+  "id": "9336c075-cd66-472c-95da-d8c76dda44e6",
+  "title": "dev_pattern",
+  "description": "Пример шаблона для разработки",
+  "supportedGeos": [
+    "RU",
+    "KZ"
+  ],
+  "categories": [
+    "FOOTBALL",
+    "NEWS",
+    "OTHER"
+  ],
+  "layersOrder": [
+    "input_photo",
+    "layer_01.png",
+    "input_text"
+  ],
+  "width": 1500,
+  "height": 1500,
+  "font": "font.ttf",
+  "textPlacement": [
+    {
+      "textLayerName": "input_text",
+      "x": 200,
+      "y": 450,
+      "maxWidth": 1100,
+      "maxHeight": 300,
+      "fontSize": 48,
+      "fontColor": "#FFFFFF",
+      "align": "center",
+      "lineHeight": 1.2,
+      "letterSpacing": 0,
+      "textBaseline": "top",
+      "shadowColor": "#000000",
+      "shadowOffsetX": 2,
+      "shadowOffsetY": 2,
+      "shadowBlur": 4
+    }
+  ],
+  "photoPlacement": [
+    {
+      "photoLayerName": "input_photo",
+      "x": 0,
+      "y": 0,
+      "width": 1500,
+      "height": 1500,
+      "fit": "cover",
+      "anchor": "center"
+    }
+  ]
+}

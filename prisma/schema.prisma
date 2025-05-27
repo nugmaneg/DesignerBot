@@ -1,0 +1,91 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Geo {
+  RU
+  MD
+  KZ
+  KG
+  TR
+  AZ
+  TJ
+  UZ
+}
+
+enum Category {
+  FOOTBALL
+  HOCKEY
+  BASKETBALL
+  VOLLEYBALL
+  TENNIS
+  ESPORTS
+  BOXING
+  NEWS
+  LOTTERY
+  OTHER
+}
+
+enum CanvasStatus {
+  DRAFT
+  COMPLETED
+  DELETED
+}
+
+enum UserRole {
+  UNKNOWN
+  USER
+  MODERATOR
+  ADMIN
+  FATHER
+}
+
+model User {
+  id                Int       @id @default(autoincrement())
+  telegramId        Int       @unique
+  telegramUsername  String?
+  role              UserRole  @default(UNKNOWN)
+  supportedGeos     Geo[]
+  favoriteTemplates Int[]
+  canvas            Canvas[]
+  lastActiveAt      DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+}
+
+model Template {
+  id            String     @id @default(uuid()) // Уникальный UUID
+  title         String // Название папки в patterns
+  description   String // Описание шаблона
+  supportedGeos Geo[] // Поддерживаемые ГЕО
+  categories    Category[] // Поддерживаемые ГЕО
+  previewFileId String? // FileID превью в Telegram
+  isPublic      Boolean    @default(false)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  canvas        Canvas[] // Созданные холсты на основе шаблона
+}
+
+model Canvas {
+  id            String       @id @default(uuid()) // Уникальный UUID
+  userId        Int // ID пользователя, которому принадлежит холст
+  templateId    String // ID шаблона, которому принадлежит холст
+  previewFileId String? // FileID превью в Telegram
+  canvasStatus  CanvasStatus @default(DRAFT) // Статус холста (черновик / использован / удален)
+  createdAt     DateTime     @default(now())
+  deletedAt     DateTime?
+
+  user     User     @relation(fields: [userId], references: [id])
+  template Template @relation(fields: [templateId], references: [id])
+}
