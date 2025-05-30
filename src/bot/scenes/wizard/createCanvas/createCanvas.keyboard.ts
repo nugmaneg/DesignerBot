@@ -110,7 +110,7 @@ export function getGalleryKeyboard(index: number, total: number, templateId: str
 
     if (index > 1)
         buttons.push(Markup.button.callback('⬅️', `templates_page:${index - 1}`));
-    buttons.push(Markup.button.callback('✅ Выбрать', `choose_template:${templateId}`));
+    buttons.push(Markup.button.callback('✅ Выбрать', `choose_template`));
     if (index < total)
         buttons.push(Markup.button.callback('➡️', `templates_page:${index + 1}`));
     buttons.push(Markup.button.callback('🔙 Категории', 'back_to_categories'));

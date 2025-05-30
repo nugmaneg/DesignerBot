@@ -1,17 +1,13 @@
-// src/template/template.service.ts
-import {Injectable, Logger} from '@nestjs/common';
+import {Injectable, Logger, NotFoundException} from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { TemplateRepository } from '../database/template.repository';
 import { Template, Geo, Category } from '@prisma/client';
-import * as path from 'node:path';
-import * as fsp from 'node:fs/promises';
 import {TemplateSettings} from "./template-settings.interface";
 import {S3Service} from "../s3/s3.service";
 
 @Injectable()
 export class TemplateService {
     private readonly logger = new Logger(TemplateService.name);
-    private readonly root = path.resolve(__dirname, '../../../patterns/templates');
     constructor(
         private readonly templateRepo: TemplateRepository,
         private readonly s3Service: S3Service,
@@ -54,33 +50,25 @@ export class TemplateService {
         return this.templateRepo.delete(id);
     }
 
-    async getTemplatePreviewBuffer(templateId: string): Promise<Buffer> {
-        // 1. Получаем шаблон из базы
-        const template = await this.findById(templateId);
-        if (!template) {
-            throw new Error(`Шаблон с id ${templateId} не найден в базе`);
+    async getTemplatePreviewBuffer(template: Template): Promise<Buffer> {
+        // Предполагается, что preview.png лежит по пути:
+        // templates/{template.title}/preview.png
+        const key = `templates/${template.title}/preview.png`;
+
+        // Проверяем, существует ли файл в S3 (если нужно)
+        const exists = await this.s3Service.fileExists(key);
+        if (!exists) {
+            throw new NotFoundException('Preview для шаблона не найден в S3');
         }
 
-        // 2. Путь к папке шаблона
-        const dirPath = path.join(this.root, template.title);
+        // Получаем файл из S3
+        const { buffer } = await this.s3Service.getObjectBuffer(key);
+        return buffer;
+    }
 
-        // 3. Ищем превью (поддержка нескольких расширений)
-        const previewNames = ['preview.png', 'preview.jpg', 'preview.jpeg', 'preview.webp'];
-        let previewPath: string | null = null;
-        for (const name of previewNames) {
-            const testPath = path.join(dirPath, name);
-            try {
-                await fsp.access(testPath);
-                previewPath = testPath;
-                break;
-            } catch {}
-        }
-        if (!previewPath) {
-            throw new Error(`Превью-файл не найден для шаблона "${template.title}" (id: ${templateId})`);
-        }
-
-        // 4. Читаем превью-файл как Buffer
-        return await fsp.readFile(previewPath);
+    async getTemplateSettings(template: Template): Promise<any> {
+        const key = `templates/${template.title}/settings.json`;
+        return this.s3Service.getJson(key);
     }
 
     /**

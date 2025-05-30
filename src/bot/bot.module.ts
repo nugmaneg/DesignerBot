@@ -9,10 +9,10 @@ import {UserMiddleware} from './middlewares/user.middleware';
 import {MiddlewareModule} from "./middlewares/middleware.module";
 import {BotService} from "./bot.service";
 import {CreateCanvasWizard} from "./scenes/wizard/createCanvas/createCanvas.wizard";
-import {TemplateService} from "../template/template.service";
-import {CanvasService} from "../canvas/canvas.service";
 import {TemplateModule} from "../template/template.module";
 import {CanvasModule} from "../canvas/canvas.module";
+import {ModerateCanvasWizard} from "./scenes/wizard/moderateCanvas/moderateCanvas.wizard";
+import {CanvasGenerationModule} from "../canvas-generation/canvas-generation.module";
 
 @Module({
     imports: [
@@ -26,8 +26,8 @@ import {CanvasModule} from "../canvas/canvas.module";
                     session(),
                     userMiddleware.middleware()
                 ],
-                launchOptions : {
-                    allowedUpdates : [
+                launchOptions: {
+                    allowedUpdates: [
                         'message',
                         'callback_query',
                     ]
@@ -36,12 +36,14 @@ import {CanvasModule} from "../canvas/canvas.module";
         }),
         TemplateModule,
         CanvasModule,
+        CanvasGenerationModule,
     ],
     providers: [
         BotService,
         BotUpdate,
         StartWizard,
         CreateCanvasWizard,
+        ModerateCanvasWizard
     ],
 })
 export class BotModule {

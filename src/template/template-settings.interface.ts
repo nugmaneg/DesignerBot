@@ -4,13 +4,13 @@ import { Geo, Category } from '@prisma/client';
 export interface TemplateSettings {
     id: string;                   // uuid шаблона в базе данных
     title: string;
+    version?: string;
     description: string;
     supportedGeos: Geo[];
     categories: Category[];
-    layersOrder: Array<string>;    // имена файлов или маркеры 'input_photo' / 'input_text'
+    layersOrder: string[];         // имена файлов или маркеры 'input_photo' / 'input_text'
     width: number;                 // ширина итогового изображения
     height: number;                // высота итогового изображения
-    font: string;                  // файл шрифта внутри assets
 
     textPlacement: [{
         textLayerName: string;
@@ -18,6 +18,7 @@ export interface TemplateSettings {
         y: number;                   // координата левого верхнего угла блока текста
         maxWidth: number;            // максимальная ширина текстового поля
         maxHeight?: number;          // максимальная высота текстового поля
+        font: string,
         fontSize: number;            // стартовый размер шрифта (px)
         fontColor: string;           // цвет текста
         align?: 'left' | 'center' | 'right';
@@ -28,6 +29,7 @@ export interface TemplateSettings {
         shadowOffsetX?: number;      // смещение тени по X
         shadowOffsetY?: number;      // смещение тени по Y
         shadowBlur?: number;         // радиус размытия тени
+        // ограничение по кол-ву символов
     }];
 
     photoPlacement?: [{
@@ -43,5 +45,6 @@ export interface TemplateSettings {
             | 'left'
             | 'right'
             | 'center';
+        borderRadius?: number;
     }];
 }
