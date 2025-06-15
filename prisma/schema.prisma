@@ -65,27 +65,42 @@ model User {
 }
 
 model Template {
-  id            String     @id @default(uuid()) // Уникальный UUID
-  title         String // Название папки в patterns
+  id            String            @id @default(uuid()) // Уникальный UUID
+  slug          String // Название папки в patterns
   description   String // Описание шаблона
+  version       TemplateVersion[]
   supportedGeos Geo[] // Поддерживаемые ГЕО
   categories    Category[] // Поддерживаемые ГЕО
   previewFileId String? // FileID превью в Telegram
-  isPublic      Boolean    @default(false)
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
+  isPublic      Boolean           @default(false)
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
   canvas        Canvas[] // Созданные холсты на основе шаблона
 }
 
-model Canvas {
-  id            String       @id @default(uuid()) // Уникальный UUID
-  userId        Int // ID пользователя, которому принадлежит холст
-  templateId    String // ID шаблона, которому принадлежит холст
-  previewFileId String? // FileID превью в Telegram
-  canvasStatus  CanvasStatus @default(DRAFT) // Статус холста (черновик / использован / удален)
-  createdAt     DateTime     @default(now())
-  deletedAt     DateTime?
+model TemplateVersion {
+  id         String   @id @default(uuid())
+  templateId String
+  version    String
+  createdAt  DateTime @default(now())
 
-  user     User     @relation(fields: [userId], references: [id])
   template Template @relation(fields: [templateId], references: [id])
+  canvases Canvas[]
+
+  @@unique([templateId, version])
+}
+
+model Canvas {
+  id                String       @id @default(uuid()) // Уникальный UUID
+  userId            Int // ID пользователя, которому принадлежит холст
+  templateId        String // ID шаблона, которому принадлежит холст
+  templateVersionId String
+  previewFileId     String? // FileID превью в Telegram
+  canvasStatus      CanvasStatus @default(DRAFT) // Статус холста (черновик / использован / удален)
+  createdAt         DateTime     @default(now())
+  deletedAt         DateTime?
+
+  user            User            @relation(fields: [userId], references: [id])
+  template        Template        @relation(fields: [templateId], references: [id])
+  templateVersion TemplateVersion @relation(fields: [templateVersionId], references: [id])
 }

@@ -6,7 +6,7 @@ import {
     Action,
 } from 'nestjs-telegraf';
 import { CanvasService } from '../../../../canvas/canvas.service';
-import { CanvasSettings } from '../../../../canvas/canvas-settings.inteface';
+import { CanvasSettings } from '../../../../canvas/canvas-settings.interface';
 import { WizardContext } from "telegraf/typings/scenes";
 import {getInputPromptMessage} from "./moderateCanvas.messages";
 import {Message} from "@telegraf/types/message";

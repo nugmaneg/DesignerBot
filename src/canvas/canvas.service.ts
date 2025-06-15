@@ -3,7 +3,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CanvasRepository } from '../database/canvas.repository';
 import { S3Service } from '../s3/s3.service';
-import {CanvasSettings, CreateCanvasSettingsInput} from './canvas-settings.inteface';
+import {CanvasSettings, CreateCanvasSettingsInput} from './canvas-settings.interface';
 import { Canvas, Prisma } from '@prisma/client';
 
 @Injectable()

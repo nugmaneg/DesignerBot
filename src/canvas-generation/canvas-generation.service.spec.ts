@@ -1,6 +1,6 @@
 import { CanvasGenerationService } from './canvas-generation.service';
 import { S3Service } from '../s3/s3.service';
-import { CanvasSettings } from '../canvas/canvas-settings.inteface';
+import { CanvasSettings } from '../canvas/canvas-settings.interface';
 import * as sharp from 'sharp';
 
 describe('CanvasGenerationService', () => {

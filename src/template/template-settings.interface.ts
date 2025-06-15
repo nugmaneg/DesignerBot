@@ -1,38 +1,34 @@
 // src/template/template-settings.interface.ts
-import { Geo, Category } from '@prisma/client';
+import {Category, Geo} from '@prisma/client';
 
 export interface TemplateSettings {
     id: string;                   // uuid шаблона в базе данных
-    title: string;
-    version?: string;
+    slug: string; // Название шаблона
+    version: string; // Версия шаблона
     description: string;
     supportedGeos: Geo[];
     categories: Category[];
-    layersOrder: string[];         // имена файлов или маркеры 'input_photo' / 'input_text'
+
     width: number;                 // ширина итогового изображения
     height: number;                // высота итогового изображения
+    layersOrder: string[];         // имена файлов или маркеры ["assets/static/bg.jpg", "input_photo_main", …]
 
-    textPlacement: [{
+    textPlacement: Array<{
         textLayerName: string;
-        x: number;                   // координата левого верхнего угла блока текста
-        y: number;                   // координата левого верхнего угла блока текста
-        maxWidth: number;            // максимальная ширина текстового поля
-        maxHeight?: number;          // максимальная высота текстового поля
-        font: string,
-        fontSize: number;            // стартовый размер шрифта (px)
-        fontColor: string;           // цвет текста
+        x: number; y: number;                   // координата левого верхнего угла блока текста
+        maxWidth: number; maxHeight?: number;
+        font: string; fontSize: number; fontColor: string;
         align?: 'left' | 'center' | 'right';
-        lineHeight?: number;         // множитель между строками
-        letterSpacing?: number;      // промежуток между буквами (px)
+        lineHeight?: number; letterSpacing?: number;      // промежуток между буквами (px)
         textBaseline?: 'top' | 'middle' | 'bottom'; // вертикальная привязка текста
+
         shadowColor?: string;        // цвет тени
         shadowOffsetX?: number;      // смещение тени по X
         shadowOffsetY?: number;      // смещение тени по Y
         shadowBlur?: number;         // радиус размытия тени
-        // ограничение по кол-ву символов
-    }];
+    }>;
 
-    photoPlacement?: [{
+    photoPlacement: Array<{
         photoLayerName: string;
         x: number;                   // X-координата области для фото
         y: number;                   // Y-координата области для фото
@@ -46,5 +42,7 @@ export interface TemplateSettings {
             | 'right'
             | 'center';
         borderRadius?: number;
-    }];
+    }>;
+
+    previewFileName: string;
 }

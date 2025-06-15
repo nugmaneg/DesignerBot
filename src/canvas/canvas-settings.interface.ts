@@ -1,50 +1,39 @@
 export interface CanvasSettings {
     id: string;
-    templateName: string;          // человекочитаемое имя шаблона (для построения путей)
     templateId: string;            // id шаблона в базе данных (для аудита и обратного поиска)
-    templateVersion?: string;       // версия шаблона (позволяет отслеживать актуальность структуры)
-    layersOrder: string[];         // имена файлов или маркеры 'input_photo' / 'input_text'
+    templateSlug: string;          // человекочитаемое имя шаблона (для построения путей)
+    templateVersion: string;       // версия шаблона (позволяет отслеживать актуальность структуры)
+
     width: number;                 // ширина итогового изображения
     height: number;                // высота итогового изображения
+    layersOrder: string[];         // имена файлов или маркеры ["assets/static/bg.jpg", "input_photo_main", …]
 
-    textPlacement: [{
+    textPlacement: Array<{
         textLayerName: string;
         text?: string;
-        x: number;                   // координата левого верхнего угла блока текста
-        y: number;                   // координата левого верхнего угла блока текста
-        maxWidth: number;            // максимальная ширина текстового поля
-        maxHeight: number;           // максимальная высота текстового поля
-        font: string,                 // Название шрифта
-        fontSize: number;            // стартовый размер шрифта (px)
-        fontColor: string;           // цвет текста
+        x: number; y: number;                   // координата левого верхнего угла блока текста
+        maxWidth: number; maxHeight?: number;
+        font: string; fontSize: number; fontColor: string;
         align?: 'left' | 'center' | 'right';
-        lineHeight?: number;         // множитель между строками
-        letterSpacing?: number;      // промежуток между буквами (px)
+        lineHeight?: number; letterSpacing?: number;      // промежуток между буквами (px)
         textBaseline?: 'top' | 'middle' | 'bottom'; // вертикальная привязка текста
+
         shadowColor?: string;        // цвет тени
         shadowOffsetX?: number;      // смещение тени по X
         shadowOffsetY?: number;      // смещение тени по Y
         shadowBlur?: number;         // радиус размытия тени
-    }];
+    }>;
 
-    photoPlacement: [{
+    photoPlacement: Array<{
         photoLayerName: string;
-        photoPath?: string;
-        x: number;                   // X-координата области для фото
-        y: number;                   // Y-координата области для фото
-        width: number;               // ширина области для фото
-        height: number;              // высота области для фото
-        fit?: 'cover' | 'contain';   // способ масштабирования
-        anchor?:                     // точка якоря внутри области
-            | 'top'
-            | 'bottom'
-            | 'left'
-            | 'right'
-            | 'center';
+        x: number; y: number; width: number; height: number;
+        fit?: 'cover' | 'contain';
+        anchor?: 'top' | 'bottom' | 'left' | 'right' | 'center';
         borderRadius?: number;
-    }];
+    }>;
 
-    previewFileName?: string;          // preview-картинка
+    previewFileName?: string;
+    renders: { full: string; thumb: string };
 }
 
 export interface CreateCanvasSettingsInput {

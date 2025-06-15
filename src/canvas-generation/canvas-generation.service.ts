@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { S3Service } from '../s3/s3.service';
-import { CanvasSettings } from '../canvas/canvas-settings.inteface';
+import { CanvasSettings } from '../canvas/canvas-settings.interface';
 import * as sharp from 'sharp';
 // --- Типы для слоёв ---
 type Layer = Buffer | { buffer: Buffer; left: number; top: number };
